@@ -2,3 +2,5 @@ wpasupplicant wireless-tools firmware-atheros firmware-brcm80211 firmware-libert
 raspberrypi-net-mods
 dhcpcd5
 net-tools
+hostapd
+dnsmasq
