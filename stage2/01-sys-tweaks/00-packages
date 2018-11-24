@@ -24,3 +24,5 @@ htop
 man-db
 policykit-1
 ssh-import-id
+jq
+sqlite
