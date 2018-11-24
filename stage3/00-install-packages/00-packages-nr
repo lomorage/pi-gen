@@ -1,4 +1,4 @@
 xserver-xorg-video-fbdev xserver-xorg xinit xserver-xorg-video-fbturbo
-menu-xdg
+lxde lxtask menu-xdg
 xdg-utils
 gvfs-backends gvfs-fuse
