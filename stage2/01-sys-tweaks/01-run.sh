@@ -11,6 +11,10 @@ install -m 644 files/console-setup   	"${ROOTFS_DIR}/etc/default/"
 
 install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
 
+install -m 755 files/usbmount           "${ROOTFS_DIR}/usr/share/usbmount/usbmount"
+
+install -m 644 files/usbmount.conf      "${ROOTFS_DIR}/etc/usbmount/usbmount.conf"
+
 on_chroot << EOF
 systemctl disable hwclock.sh
 systemctl disable nfs-common

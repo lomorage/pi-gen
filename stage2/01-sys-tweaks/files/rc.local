@@ -17,4 +17,6 @@ if [ "$_IP" ]; then
   printf "My IP address is %s\n" "$_IP"
 fi
 
+service systemd-udevd restart
+
 exit 0
