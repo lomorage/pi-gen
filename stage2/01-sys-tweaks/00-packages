@@ -26,3 +26,11 @@ policykit-1
 ssh-import-id
 jq
 sqlite
+python-serial python3-serial
+python-pip python3-pip
+python3-numpy
+wiringpi pigpio python-pigpio python3-pigpio raspi-gpio python-gpiozero python3-gpiozero python3-rpi.gpio
+python-spidev python3-spidev
+python-smbus python3-smbus
+python-flask python3-flask
+libav-tools
