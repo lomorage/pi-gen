@@ -1,7 +1,52 @@
-# pi-gen
+# piem
 
-_Tool used to create the raspberrypi.org Raspbian images_
+_Tool to generate Raspbian images used for network emulator_
 
+This image simplified the network emulator setup on Raspberry Pi 3, by just installed the image without extra setup.
+
+## Installation
+
+You can get the pre-build image here, and download [Etcher](https://etcher.io/) and install the image on the micro sdcard.
+
+Once startup, it already setup wifi in AP mode and bridge between wifi (wlan) and ethernet (eth0) ports. You can plug in the ethernet port to your local network, you can then ping `piem.local` to get the ip address of the emulator.
+
+And then connect your testing devices via wifi:
+
+```
+Wifi SSID: `piem`, password: `piemulator`
+```
+
+Then you can emulate the network condition of those test devices, both uplink and downlink.
+
+## Network emulation
+
+There is a emulator script [emulator.sh](/stage2/02-net-tweaks/files/emulator.sh) built in.
+
+```
+$ emulator.sh -h
+usage: emulator.sh [parameters] {start|stop|restart}
+    -b|--bw [bandwidthKbps]            bandwidth in kbps
+    -l|--loss [loss-percentage]        loss in percentage %
+    -d|--delay [delayMs]               delay in milliseconds
+    -q|--qdelay [qdelayMs]             maxinum queueing delay in milliseconds
+    -f|--filter [ipFilter]             filter of source/destination ip address
+    --burst [burstLen]                 burst length in packets
+    --uplink                           enforce on uplink
+    --downlink                         enforce on downlink
+```
+
+- If you perfer wired connection, you can switch to two ethernet (another one using usb-ethernet port) using the script [bridge\_switch.sh](/stage2/02-net-tweaks/files/bridge_switch.sh) built in.
+
+```
+$ bridge_switch.sh -h
+Usage: bridge_switch.sh {wlan|eth}
+```
+
+After plugin your usb-ethernet port, then `bridge_switch.sh eth`, you should be able to see "eth1" in `ifconfig` output now, and now the bridge is setup between "eth0" and "eth1".
+
+Then you can connect your testing device to "eth1", and the you need change `INGRESS_INF` in emulator.sh (located in `/sbin/emulator.sh`) from "wlan0" to  "eth1".
+
+If you want to connect multiple devices to eth1, you can use network switch(DO NOT USE router, that will break the emulator settings because the ip address changes when using NAT).
 
 ## Dependencies
 
