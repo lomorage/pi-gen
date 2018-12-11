@@ -1,12 +1,12 @@
 # piem
 
-_Tool to generate Raspbian images used for network emulator_
+_Tool to generate Raspbian image used for network emulator_
 
 This image simplified the network emulator setup on Raspberry Pi 3, by just installed the image without extra setup.
 
 ## Installation
 
-You can get the pre-build image here, and download [Etcher](https://etcher.io/) and install the image on the micro sdcard.
+You can get the pre-build image [here](https://cisco.box.com/s/fe7ocl2gchnvgpxgjutxmh6azvxer1ya), and download [Etcher](https://etcher.io/) and install the image on the micro sdcard.
 
 Once startup, it already setup wifi in AP mode and bridge between wifi (wlan) and ethernet (eth0) ports. You can plug in the ethernet port to your local network, you can then ping `piemulator.local` to get the ip address of the emulator.
 
