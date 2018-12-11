@@ -8,7 +8,7 @@ This image simplified the network emulator setup on Raspberry Pi 3, by just inst
 
 You can get the pre-build image here, and download [Etcher](https://etcher.io/) and install the image on the micro sdcard.
 
-Once startup, it already setup wifi in AP mode and bridge between wifi (wlan) and ethernet (eth0) ports. You can plug in the ethernet port to your local network, you can then ping `piem.local` to get the ip address of the emulator.
+Once startup, it already setup wifi in AP mode and bridge between wifi (wlan) and ethernet (eth0) ports. You can plug in the ethernet port to your local network, you can then ping `piemulator.local` to get the ip address of the emulator.
 
 And then connect your testing devices via wifi:
 
