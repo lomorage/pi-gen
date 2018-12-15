@@ -1,0 +1,13 @@
+[Unit]
+Description=Status Light Service on BCM pin %I
+
+[Service]
+Type=simple
+User=root
+EnvironmentFile=/etc/lomo-gpio/light-%i.conf
+ExecStart=/sbin/gpio_light.py ${ARG1} ${ARG2} ${ARG3}
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target

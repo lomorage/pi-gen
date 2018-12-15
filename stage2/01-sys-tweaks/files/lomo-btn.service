@@ -1,0 +1,12 @@
+[Unit]
+Description=Lomorage Button Service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/sbin/gpio_button.py -c "shutdown -h now" -l "wifi_switch.sh ap"
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
