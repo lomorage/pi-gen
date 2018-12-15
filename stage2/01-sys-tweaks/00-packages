@@ -26,6 +26,7 @@ policykit-1
 ssh-import-id
 jq
 sqlite
+lomo-backend
 python-serial python3-serial
 python-pip python3-pip
 python3-numpy
