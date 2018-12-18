@@ -1,0 +1,5 @@
+{
+    "ingress": "wlan0",
+    "egress": "eth0",
+    "numifbs": 64
+}

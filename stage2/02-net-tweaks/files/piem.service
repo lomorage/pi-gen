@@ -1,0 +1,14 @@
+[Unit]
+Description=Pi Network Emulator Service
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+User=root
+ExecStart=/sbin/emulator.py init
+ExecStop=/sbin/emulator.py uninit
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target

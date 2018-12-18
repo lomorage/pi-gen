@@ -2,13 +2,13 @@
 
 _Tool to generate Raspbian image used for network emulator_
 
-This image simplified the network emulator setup on Raspberry Pi 3, by just installed the image without extra setup.
+This image simplifies the network emulator setup on Raspberry Pi 3, by just installing the image without extra setup. If you are using old Raspberry Pi which doesn't have wifi module built in, you can either using an USB wifi adapter or using an usb-ethernet adapter and switch to use [ethernet bridge](#switch-to-wired-bridge).
 
 ## Installation
 
 You can get the pre-build image [here](https://cisco.box.com/s/fe7ocl2gchnvgpxgjutxmh6azvxer1ya), and download [Etcher](https://etcher.io/) and install the image on the micro sdcard.
 
-Once startup, it already setup wifi in AP mode and bridge between wifi (wlan) and ethernet (eth0) ports. You can plug in the ethernet port to your local network, you can then ping `piemulator.local` to get the ip address of the emulator.
+Once startup, it already setup wifi in AP mode and bridge between wifi (wlan0) and ethernet (eth0) ports. You can plug in the ethernet port to your local network, you can then ping `piemulator.local` to get the ip address of the emulator, or you can just use the domain name for ssh access, like `ssh pi@piemulator.local`.
 
 And then connect your testing devices via wifi:
 
@@ -20,22 +20,155 @@ Then you can emulate the network condition of those test devices, both uplink an
 
 ## Network emulation
 
-There is a emulator script [emulator.sh](/stage2/02-net-tweaks/files/emulator.sh) built in.
+There is a emulator script [emulator.py](/stage2/02-net-tweaks/files/emulator.py) built in.
 
 ```
-$ emulator.sh -h
-usage: emulator.sh [parameters] {start|stop|restart}
-    -b|--bw [bandwidthKbps]            bandwidth in kbps
-    -l|--loss [loss-percentage]        loss in percentage %
-    -d|--delay [delayMs]               delay in milliseconds
-    -q|--qdelay [qdelayMs]             maxinum queueing delay in milliseconds
-    -f|--filter [ipFilter]             filter of source/destination ip address
-    --burst [burstLen]                 burst length in packets
-    --uplink                           enforce on uplink
-    --downlink                         enforce on downlink
+$ sudo emulator.py -h
+emulator.py [-h] [--dryrun] {config,list,init,uninit,add,remove} ...
+
+positional arguments:
+  {config,list,init,uninit,add,remove}
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --dryrun              Dry run
 ```
 
-- If you perfer wired connection, you can switch to two ethernet (another one using usb-ethernet port) using the script [bridge\_switch.sh](/stage2/02-net-tweaks/files/bridge_switch.sh) built in.
+Normally you won't need to config it since it already configured in the pre-build image, and will reconfigure when using the [bridge\_switch.sh](/stage2/02-net-tweaks/files/bridge_switch.sh) below.
+
+```
+$ sudo emulator.py config -h
+loads config from /etc/piem/config.json
+{
+    # ingress of the bridge network connected with testing devices need add network impairment
+    "ingress": "wlan0",
+
+    # egress of the bridge network connected to private network
+    "egress": "eth0",
+
+    # need one ifb device for each emulation rule (identified by ip filter and uplink/downlink direction)
+    "numifbs": 64
+}
+
+usage: emulator.py config [-h] [--ingress INGRESS] [--egress EGRESS]
+                          [--numifbs NUMIFBS]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --ingress INGRESS, -i INGRESS
+                        ingress network interface
+  --egress EGRESS, -e EGRESS
+                        egress network interface
+  --numifbs NUMIFBS, -n NUMIFBS
+                        number of ifb devices
+```
+
+You can list the configuration and rules set:
+
+```
+$ sudo emulator.py list
+loads config from /etc/piem/config.json
+{
+    "ingress": "wlan0",
+    "egress": "eth0",
+    "numifbs": 64
+}
+
+loads rules from /etc/piem/piem.rules
+[
+    {
+        "qdelay": 100,
+        "loss": 3,
+        "direction": "downlink",
+        "bw": 8000,
+        "handle": 2,
+        "delay": 10,
+        "burst": null,
+        "emfilter": "192.168.1.5"
+    }
+]
+```
+
+And normally you won't need init/uninit it either because they will be called automatically when system start/stop, besides using the python script, you can also use systemd:
+
+```
+$ sudo systemctl start piem
+$ sudo systemctl stop piem
+$ sudo systemctl restart piem
+```
+
+**stop the service or uninit will remove all the rules added**.
+
+You can add an network emulation rule:
+
+```
+$ sudo emulator.py add -h
+usage: emulator.py add [-h] [--bw BW] [--loss LOSS] [--burst BURST]
+                       [--delay DELAY] [--qdelay QDELAY] --filter FILTER
+                       --direction {uplink,downlink}
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --bw BW, -b BW        rate limit in kbps
+  --loss LOSS, -l LOSS  loss ratio in percentage, 5 is 5%
+  --burst BURST         burst length in packets
+  --delay DELAY, -d DELAY
+                        delay in ms
+  --qdelay QDELAY, -q QDELAY
+                        maxinum queuing delay in ms
+  --filter FILTER, -f FILTER
+                        src(uplink) or dst(downlink) ip filter
+  --direction {uplink,downlink}, -c {uplink,downlink}
+```
+
+You can try add delay and use ping on the testing device (192.168.1.5 below) to validate that:
+
+```
+$ sudo emulator.py add -f 192.168.1.5 -c downlink -l 3
+
+loads rules from /etc/piem/piem.rules
+[]
+
+save rules to /etc/piem/piem.rules
+[
+    {
+        "qdelay": 100,
+        "loss": 3,
+        "direction": "downlink",
+        "bw": 8000,
+        "handle": 2,
+        "delay": 10,
+        "burst": null,
+        "emfilter": "192.168.1.5"
+    }
+]
+
+
+        ip link set dev ifb0 up
+        tc filter add dev eth0 parent ffff: protocol ip prio 1 u32 match ip dst 192.168.1.5 flowid 1:1 action mirred egress redirect dev ifb0
+        tc qdisc add dev ifb0 root handle 1: netem loss random 3% delay 10ms
+        tc class add dev wlan0 parent 1:1 classid 1:2 htb rate 8000kbit
+        tc filter add dev wlan0 protocol ip parent 1:0 prio 1 u32 match ip dst 192.168.1.5 flowid 1:2
+        tc qdisc add dev wlan0 parent 1:2 bfifo limit 100000
+```
+
+To remove the rule, you need at least specify the ip filter, you can specify direction, if not it will try remove rules for both uplink and downlink:
+
+```
+$ sudo emulator.py remove -h
+
+usage: emulator.py remove [-h] --filter FILTER [--direction {uplink,downlink}]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --filter FILTER, -f FILTER
+                        src(uplink) or dst(downlink) ip filter
+  --direction {uplink,downlink}, -c {uplink,downlink}
+```
+
+## Switch to wired bridge
+
+If you perfer wired connection, you can switch to two ethernet (another one using usb-ethernet port) using the script [bridge\_switch.sh](/stage2/02-net-tweaks/files/bridge_switch.sh) built in.
 
 ```
 $ bridge_switch.sh -h
@@ -44,9 +177,13 @@ Usage: bridge_switch.sh {wlan|eth}
 
 After plugin your usb-ethernet port, then `bridge_switch.sh eth`, you should be able to see "eth1" in `ifconfig` output now, and now the bridge is setup between "eth0" and "eth1".
 
-Then you can connect your testing device to "eth1", and the you need change `INGRESS_INF` in emulator.sh (located in `/sbin/emulator.sh`) from "wlan0" to  "eth1".
+You can use `emulator.py list` to make sure the ingress are set to "eth1" instead of "wlan0".
 
 If you want to connect multiple devices to eth1, you can use network switch(DO NOT USE router, that will break the emulator settings because the ip address changes when using NAT).
+
+## Packet loss burst model
+
+Currently Simple Gilbert Model is used for burst loss, and for more intuitive way to set the parameters, burst length (consecutive loss) and packet loss ratio is used. See "3.2.4 Consecutive losses: GI model with 2 parameters" in the paper ["Definition of a general and intuitive loss model for packet networks and its implementation in the Netem module in the Linux kernel"](http://netgroup.uniroma2.it/TR/TR-loss-netem.pdf) for more details.
 
 ## Dependencies
 
