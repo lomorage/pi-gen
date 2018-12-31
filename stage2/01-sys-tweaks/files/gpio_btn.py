@@ -78,7 +78,7 @@ def main():
     parser.add_argument('--pin', '-p', type=int, help='BCM pin number the button is connected with, default to pin 3', default=3)
     parser.add_argument('--click', '-c', help='click action command', default='echo "Button clicked"')
     parser.add_argument('--held', '-l', help='long press action command', default='echo "Button held"')
-    parser.add_argument('--hold_time', type=int, help='hold time in seconds before trigger long press event, default to 3 seconds', default=3)
+    parser.add_argument('--hold_time', type=int, help='hold time in seconds before trigger long press event, default to 5 seconds', default=5)
     parser.add_argument('--debounce_delay', type=int, help='will ignore click events less than debounce time in milliseconds, default to 300 ms', default=300)
     args = parser.parse_args()
 
