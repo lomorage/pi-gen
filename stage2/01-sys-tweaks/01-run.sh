@@ -13,6 +13,8 @@ install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
 
 install -m 755 files/usbmount           "${ROOTFS_DIR}/usr/share/usbmount/usbmount"
 install -m 644 files/usbmount.conf      "${ROOTFS_DIR}/etc/usbmount/"
+install -m 644 files/usbmount.rules     "${ROOTFS_DIR}/etc/udev/rules.d/"
+install -m 644 files/usbmount@.service  "${ROOTFS_DIR}/etc/systemd/system/"
 
 install -m 644 files/lomo-btn.service     "${ROOTFS_DIR}/etc/systemd/system/"
 install -m 644 files/lomo-light@.service  "${ROOTFS_DIR}/etc/systemd/system/"

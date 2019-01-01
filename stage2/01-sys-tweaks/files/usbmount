@@ -113,9 +113,12 @@ if [ "$1" = add ]; then
 	log debug "$DEVNAME contains filesystem type $FSTYPE"
 
 	fstype=$FSTYPE
+        if [ "$FSTYPE" = "ntfs" ] || [ "$FSTYPE" = "fuseblk" ]; then
+            fstype="ntfs-3g"
+        fi
 	# Test if the filesystem type is in the list of filesystem
 	# types to mount.
-	if in_list "$fstype" "$FILESYSTEMS"; then
+	if in_list "$FSTYPE" "$FILESYSTEMS"; then
 
             # Determine vendor and model.
             vendor=
