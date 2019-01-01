@@ -27,6 +27,7 @@ case "$1" in
 
                 sudo rm /etc/network/interfaces
                 sudo ln -sf /etc/network/interfaces.client /etc/network/interfaces
+                sudo ip addr flush wlan0
                 wpa_config $2 $3
                 sudo systemctl enable wpa_supplicant.service
                 sudo systemctl restart wpa_supplicant.service
@@ -39,6 +40,7 @@ case "$1" in
 
                 sudo rm /etc/network/interfaces
                 sudo ln -sf /etc/network/interfaces.ap /etc/network/interfaces
+                sudo ip addr flush wlan0
                 sudo systemctl restart networking.service
                 sudo systemctl enable dnsmasq.service
                 sudo systemctl enable hostapd.service
