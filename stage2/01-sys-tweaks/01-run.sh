@@ -23,6 +23,7 @@ install -m 755 files/gpio_light.py        "${ROOTFS_DIR}/sbin/"
 install -m 755 files/gpio_light.sh        "${ROOTFS_DIR}/sbin/"
 
 install -m 644 files/lomod.service        "${ROOTFS_DIR}/etc/avahi/services"
+install -m 755 files/update-lomod         "${ROOTFS_DIR}/etc/cron.daily/"
 
 on_chroot << EOF
 systemctl disable hwclock.sh

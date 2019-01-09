@@ -14,6 +14,7 @@ raspberrypi-sys-mods
 pi-bluetooth
 apt-listchanges
 usb-modeswitch
+ntfs-3g
 usbmount
 apt-transport-https
 libpam-chksshpwd
