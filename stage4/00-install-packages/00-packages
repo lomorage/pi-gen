@@ -1,0 +1,4 @@
+wget
+git
+libgconf-2-4
+lightdm

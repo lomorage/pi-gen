@@ -4,7 +4,7 @@ Description=Lomorage Button Service
 [Service]
 Type=simple
 User=root
-ExecStart=/sbin/gpio_button.py -c "shutdown -h now" -l "wifi_switch.sh ap"
+ExecStart=/sbin/gpio_btn.py -c "shutdown -h now" -l "wifi_switch.sh ap"
 StandardOutput=syslog
 StandardError=syslog
 
