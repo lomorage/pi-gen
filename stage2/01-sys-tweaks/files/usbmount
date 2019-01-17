@@ -112,6 +112,11 @@ if [ "$1" = add ]; then
     else
 	log debug "$DEVNAME contains filesystem type $FSTYPE"
 
+        CHARSET="nls=utf8"
+        if [ "$FSTYPE" = "vfat" ]; then
+            CHARSET="iocharset=utf8"
+        fi
+
 	fstype=$FSTYPE
         if [ "$FSTYPE" = "ntfs" ] || [ "$FSTYPE" = "fuseblk" ]; then
             fstype="ntfs-3g"
@@ -190,7 +195,7 @@ if [ "$1" = add ]; then
 		    fi
 		done
 		if [ -n "$MOUNTOPTIONS" ]; then
-		    options="$MOUNTOPTIONS${options:+,$options}"
+		    options="$MOUNTOPTIONS,$CHARSET${options:+,$options}"
 		fi
 
 		# Mount the filesystem.
