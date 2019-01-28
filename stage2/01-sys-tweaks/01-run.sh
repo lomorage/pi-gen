@@ -39,6 +39,11 @@ on_chroot << EOF
 rm -rf /media/usb* || true
 EOF
 
+on_chroot << EOF
+ln -nsf /bin/ntfsfix /sbin/fsck.ntfs
+ln -nsf /bin/ntfsfix /sbin/fsck.ntfs-3g
+EOF
+
 if [ "${USE_QEMU}" = "1" ]; then
 	echo "enter QEMU mode"
 	install -m 644 files/90-qemu.rules "${ROOTFS_DIR}/etc/udev/rules.d/"

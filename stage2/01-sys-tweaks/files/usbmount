@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # This script mounts USB mass storage devices when they are plugged in
 # and unmounts them when they are removed.
 # Copyright © 2004, 2005 Martin Dickopp
@@ -50,6 +50,9 @@ MOUNTOPTIONS=
 FS_MOUNTOPTIONS=
 VERBOSE=no
 UUID_MOUNT_MODE=yes
+FORCE_FSCK=yes
+
+EXT_FS="ext"
 
 if [ -r /etc/usbmount/usbmount.conf ]; then
     . /etc/usbmount/usbmount.conf
@@ -100,6 +103,17 @@ if [ "$1" = add ]; then
 	exit 0
     fi
 
+    if [ "$FORCE_FSCK" = "yes" ]; then
+        log info "Running fsck on $DEVNAME before mount..."
+        output=$(fsck -y -f -M $DEVNAME || true)
+        log info "$output"
+        if [ $retVal -ne 0 ]; then
+            log info "fsck failed with error code: $retVal"
+        else
+            log info "fsck done"
+        fi
+    fi
+
     # Try to use specifications in /etc/fstab first.
     if egrep -q "^[[:blank:]]*$DEVNAME" /etc/fstab; then
 	log info "executing command: mount $DEVNAME"
@@ -115,6 +129,9 @@ if [ "$1" = add ]; then
         CHARSET="nls=utf8"
         if [ "$FSTYPE" = "vfat" ]; then
             CHARSET="iocharset=utf8"
+        fi
+        if [[ $FSTYPE == *$EXT_FS* ]]; then
+            CHARSET=""
         fi
 
 	fstype=$FSTYPE
@@ -195,12 +212,35 @@ if [ "$1" = add ]; then
 		    fi
 		done
 		if [ -n "$MOUNTOPTIONS" ]; then
-		    options="$MOUNTOPTIONS,$CHARSET${options:+,$options}"
+		    options="$MOUNTOPTIONS,${options:+,$options}"
 		fi
+		if [ -n "$CHARSET" ]; then
+		    options="$CHARSET${options:+,$options}"
+		fi
+                if [[ $FSTYPE != *$EXT_FS* ]]; then
+		    if [ -n "$USER_ID" ]; then
+		        options="uid=$USER_ID${options:+,$options}"
+		    fi
+		    if [ -n "$GROUP_ID" ]; then
+		        options="gid=$GROUP_ID${options:+,$options}"
+		    fi
+                fi
+                if [ "$FSTYPE" = "hfsplus" ]; then
+		    options="force,rw,${options:+,$options}"
+                fi
 
 		# Mount the filesystem.
 		log info "executing command: mount -t$fstype ${options:+-o$options} $DEVNAME $mountpoint"
 		mount "-t$fstype" "${options:+-o$options}" "$DEVNAME" "$mountpoint"
+
+                if [[ $FSTYPE == *$EXT_FS* ]]; then
+                    log info "change owner to $USER_ID:$GROUP_ID for $mountpoint"
+                    chown -R $USER_ID:$GROUP_ID "$mountpoint"
+                fi
+                if [ "$FSTYPE" = "hfsplus" ]; then
+                    log info "change owner to $USER_ID:$GROUP_ID for $mountpoint"
+                    chown -R $USER_ID:$GROUP_ID "$mountpoint"
+                fi
 
 		if [ "$UUID_MOUNT_MODE" = "yes" ]; then
 		    # Save the mountpoint name for unmounting in /var/run/usbmount

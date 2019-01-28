@@ -15,6 +15,7 @@ pi-bluetooth
 apt-listchanges
 usb-modeswitch
 ntfs-3g
+hfsplus hfsutils hfsprogs
 usbmount
 apt-transport-https
 libpam-chksshpwd
