@@ -5,7 +5,7 @@ TIMEOUT_SEC=5
 CLIENT_MODE_READY=0
 
 usage() {
-        echo "Usage: $0 {client [ssid] [password]|ap}" >&2
+        echo "Usage: $0 {client [ssid] [password]|ap|eth}" >&2
         exit 3
 }
 
@@ -84,6 +84,19 @@ case "$1" in
                 ;;
         ap)
                 echo "wifi switching to AP mode"
+                switch_ap_mode
+                ;;
+        eth)
+                echo "wifi off and switch to ethernet wired mode"
+                sudo systemctl stop dnsmasq.service
+                sudo systemctl stop hostapd.service
+                sudo systemctl disable dnsmasq.service
+                sudo systemctl disable hostapd.service
+
+                sudo rm /etc/network/interfaces
+                sudo ln -sf /etc/network/interfaces.eth /etc/network/interfaces
+                sudo ip addr flush wlan0
+                sudo systemctl restart networking.service
                 ;;
         *)
                 usage
