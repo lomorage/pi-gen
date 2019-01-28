@@ -1,30 +1,7 @@
 #!/bin/bash
 
-NODE_VERSION=v9.8.0;
 MAGIC_MIRROR_DIR=/home/pi/MagicMirror
-NPM_CACHE=/home/pi/.npm/npm-cache
 
-# Install node.js
-echo "Install node.js..."
-
-cd /tmp;
-wget https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-armv7l.tar.gz;
-tar -xzf node-$NODE_VERSION-linux-armv7l.tar.gz;
-rm node-$NODE_VERSION-linux-armv7l.tar.gz;
-rm -rf /opt/nodejs;
-mv node-$NODE_VERSION-linux-armv7l /opt/nodejs/;
-
-ln -f -s /opt/nodejs/bin/node /sbin/node;
-ln -f -s /opt/nodejs/bin/npm /sbin/npm;
-
-npm config set unsafe-perm true
-npm cache clean -f
-npm config set cache $NPM_CACHE --global
-npm set progress=false
-rm -rf $NPM_CACHE
-sudo -H -u pi bash -c "mkdir -p $NPM_CACHE"
-
-# Install MagicMirror
 echo "Cloning MagicMirror ..."
 rm -rf $MAGIC_MIRROR_DIR
 sudo -H -u pi bash -c "git clone --depth=1 https://github.com/MichMich/MagicMirror.git $MAGIC_MIRROR_DIR"
