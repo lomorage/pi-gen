@@ -19,4 +19,6 @@ fi
 
 service systemd-udevd restart
 
+/etc/cron.daily/update-lomod
+
 exit 0
