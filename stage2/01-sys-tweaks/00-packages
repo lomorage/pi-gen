@@ -43,3 +43,4 @@ python-smbus python3-smbus
 python-flask python3-flask
 libav-tools
 rng-tools
+ethtool
