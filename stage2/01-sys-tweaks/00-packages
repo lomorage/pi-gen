@@ -42,3 +42,4 @@ python-spidev python3-spidev
 python-smbus python3-smbus
 python-flask python3-flask
 libav-tools
+rng-tools
