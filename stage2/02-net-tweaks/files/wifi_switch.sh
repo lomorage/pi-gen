@@ -30,6 +30,7 @@ switch_ap_mode() {
         sudo systemctl enable hostapd.service
         sudo systemctl restart dnsmasq.service
         sudo systemctl restart hostapd.service
+        sudo systemctl restart avahi-daemon
 }
 
 wait_client_mode_ready()
@@ -74,6 +75,7 @@ case "$1" in
                 sudo systemctl enable wpa_supplicant.service
                 sudo systemctl restart wpa_supplicant.service
                 sudo systemctl restart networking.service
+                sudo systemctl restart avahi-daemon
 
                 wait_client_mode_ready
                 if [ $CLIENT_MODE_READY -eq 1 ]; then
@@ -97,6 +99,7 @@ case "$1" in
                 sudo ln -sf /etc/network/interfaces.eth /etc/network/interfaces
                 sudo ip addr flush wlan0
                 sudo systemctl restart networking.service
+                sudo systemctl restart avahi-daemon
                 ;;
         *)
                 usage
