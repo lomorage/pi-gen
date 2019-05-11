@@ -14,6 +14,7 @@ raspberrypi-sys-mods
 pi-bluetooth
 apt-listchanges
 usb-modeswitch
+exfat-fuse
 ntfs-3g
 hfsplus hfsutils hfsprogs
 usbmount
@@ -30,6 +31,8 @@ jq
 sqlite
 lomo-vips
 lomo-backend
+iftop
+tcpdump
 python-serial python3-serial
 python-pip python3-pip
 python3-numpy
