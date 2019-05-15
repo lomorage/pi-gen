@@ -179,6 +179,7 @@ if [ "$1" = add ]; then
 		    mountpoint="${mountpoint}${UUID}"
                 fi
 
+                mountpoint=${mountpoint// /}
 		# save the non-media-part of the mounpoint for the file in
 		# /var/run/usbmount/ and set mountpoint to a
 		# fully qualified path in /media
