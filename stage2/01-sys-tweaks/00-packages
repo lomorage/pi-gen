@@ -29,6 +29,7 @@ policykit-1
 ssh-import-id
 jq
 sqlite
+zip
 lomo-vips
 lomo-backend
 iftop
