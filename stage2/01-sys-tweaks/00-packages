@@ -18,7 +18,6 @@ exfat-fuse
 ntfs-3g
 hfsplus hfsutils hfsprogs
 usbmount
-apt-transport-https
 libpam-chksshpwd
 rpi-update
 libmtp-runtime
