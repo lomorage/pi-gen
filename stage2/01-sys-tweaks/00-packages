@@ -5,7 +5,7 @@ python-rpi.gpio v4l-utils
 avahi-daemon
 lua5.1
 luajit
-hardlink ca-certificates curl
+hardlink curl
 fake-hwclock nfs-common usbutils
 libraspberrypi-dev libraspberrypi-doc libfreetype6-dev
 dosfstools
@@ -40,7 +40,7 @@ wiringpi pigpio python-pigpio python3-pigpio raspi-gpio python-gpiozero python3-
 python-spidev python3-spidev
 python-smbus python3-smbus
 python-flask python3-flask
-libav-tools
+ffmpeg
 rng-tools
 ethtool
 vl805fw
