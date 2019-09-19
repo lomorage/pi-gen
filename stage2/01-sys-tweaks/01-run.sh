@@ -80,8 +80,3 @@ usermod --pass='*' root
 EOF
 
 rm -f "${ROOTFS_DIR}/etc/ssh/"ssh_host_*_key*
-
-install -v -m 755 files/install_node.sh          "${ROOTFS_DIR}/sbin/install_node.sh"
-on_chroot << EOF
-/sbin/install_node.sh
-EOF

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 NODE_VERSION=v9.8.0;
 NPM_CACHE=/home/pi/.npm/npm-cache
@@ -17,6 +18,7 @@ mv node-$NODE_VERSION-linux-armv7l /opt/nodejs/;
 ln -f -s /opt/nodejs/bin/node /sbin/node;
 ln -f -s /opt/nodejs/bin/npm /sbin/npm;
 
+rm -rf $NPM_CACHE
 npm config set unsafe-perm true
 npm cache clean -f
 npm config set cache $NPM_CACHE --global
