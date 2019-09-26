@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-install -v -m 755 files/install_node.sh          "${ROOTFS_DIR}/sbin/install_node.sh"
+install -v -m 755 files/node-install                    "${ROOTFS_DIR}/sbin/node-install"
+install -v -m 755 files/localtunnel_install.sh          "${ROOTFS_DIR}/sbin/localtunnel_install.sh"
+sed -i "s/FIRST_USER_NAME/$FIRST_USER_NAME/g"           "${ROOTFS_DIR}/sbin/localtunnel_install.sh"
 
-#on_chroot << EOF
-#/sbin/install_node.sh
-#EOF
+install -v -m 755 files/localtunnel.sh                  "${ROOTFS_DIR}/sbin/localtunnel.sh"
