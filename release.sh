@@ -107,7 +107,14 @@ if [ -z "$CONTENT" ]
 	exit
 fi
 
+nowDate=$(date +"%Y_%m_%d")
+nowTime=$(date +"%H_%M_%S")
+commitHash=$(git rev-parse --short HEAD)
+RELEASE_VERSION="$nowDate.$nowTime.0.$commitHash"
+CONTENT="$RELEASE_VERSION$CONTENT"
+
 echo "$CONTENT"
+echo "$RELEASE_VERSION"
 
 if [ ! -z $1 ]
 then
@@ -115,6 +122,8 @@ then
     then
         echo "releasing $1..."
         hub release create -a $1 -m "$CONTENT" $RELEASE_VERSION
+        IMAGE_NAME=`basename $1`
+        echo "https://github.com/lomorage/pi-gen/releases/download/$RELEASE_VERSION/$IMAGE_NAME"
     else
         echo "Error: $1 not exists"
     fi
