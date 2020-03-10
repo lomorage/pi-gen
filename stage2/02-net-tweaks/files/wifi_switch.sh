@@ -15,7 +15,10 @@ country=US
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 EOF"
-        sudo sh -c "wpa_passphrase $1 $2 >> /etc/wpa_supplicant/wpa_supplicant.conf"
+        sudo sh -c "wpa_passphrase \"$1\" $2 >> /etc/wpa_supplicant/wpa_supplicant.conf"
+        ssid=$(printf "$1" | xxd -ps -)
+        sudo sed -i "s/ssid=.*/ssid=$ssid/" /etc/wpa_supplicant/wpa_supplicant.conf
+
 }
 
 switch_ap_mode() {
@@ -71,7 +74,7 @@ case "$1" in
                 sudo rm /etc/network/interfaces
                 sudo ln -sf /etc/network/interfaces.client /etc/network/interfaces
                 sudo ip addr flush wlan0
-                wpa_config $2 $3
+                wpa_config "$2" $3
                 sudo systemctl enable wpa_supplicant.service
                 sudo systemctl restart wpa_supplicant.service
                 sudo systemctl restart networking.service
