@@ -29,8 +29,13 @@ ssh-import-id
 jq
 sqlite
 zip
+supervisor
+python3 python3-pyudev python3-pygame
 lomo-vips
 lomo-backend
+lomo-omxplayer
+lomo-web
+lomo-frame
 iftop
 tcpdump
 python-serial python3-serial
