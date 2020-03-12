@@ -1,4 +1,5 @@
 #!/bin/bash -e
+set -x
 # shellcheck disable=SC2119
 run_sub_stage()
 {

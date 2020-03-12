@@ -18,5 +18,5 @@ if [ "$_IP" ]; then
 fi
 
 service systemd-udevd restart
-
+service supervisor restart
 exit 0
