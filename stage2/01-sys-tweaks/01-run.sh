@@ -11,26 +11,12 @@ install -m 644 files/console-setup   	"${ROOTFS_DIR}/etc/default/"
 
 install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
 
-install -m 755 files/usbmount           "${ROOTFS_DIR}/usr/share/usbmount/usbmount"
-install -m 644 files/usbmount.conf      "${ROOTFS_DIR}/etc/usbmount/"
-install -m 644 files/usbmount.rules     "${ROOTFS_DIR}/etc/udev/rules.d/"
-install -m 644 files/usbmount@.service  "${ROOTFS_DIR}/etc/systemd/system/"
-install -m 644 files/systemd-udevd.service "${ROOTFS_DIR}/lib/systemd/system/"
-
-install -m 644 files/lomo-btn.service     "${ROOTFS_DIR}/etc/systemd/system/"
-install -m 644 files/lomo-light@.service  "${ROOTFS_DIR}/etc/systemd/system/"
-install -m 755 files/gpio_btn.py          "${ROOTFS_DIR}/sbin/"
-install -m 755 files/gpio_light.py        "${ROOTFS_DIR}/sbin/"
-install -m 755 files/gpio_light.sh        "${ROOTFS_DIR}/sbin/"
-
 install -m 755 files/update-lomod         "${ROOTFS_DIR}/etc/cron.daily/"
 
 on_chroot << EOF
 systemctl disable hwclock.sh
 systemctl disable nfs-common
 systemctl disable rpcbind
-systemctl enable lomo-btn.service
-systemctl enable lomo-light@17.service
 
 if [ "${ENABLE_SSH}" == "1" ]; then
 	systemctl enable ssh
@@ -42,11 +28,6 @@ EOF
 
 on_chroot << EOF
 rm -rf /media/usb* || true
-EOF
-
-on_chroot << EOF
-ln -nsf /bin/ntfsfix /sbin/fsck.ntfs
-ln -nsf /bin/ntfsfix /sbin/fsck.ntfs-3g
 EOF
 
 if [ "${USE_QEMU}" = "1" ]; then
