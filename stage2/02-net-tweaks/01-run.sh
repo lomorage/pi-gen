@@ -1,5 +1,4 @@
 #!/bin/bash -e
-install -v -m 644 files/interfaces.eth           "${ROOTFS_DIR}/etc/network/interfaces"
 
 install -v -d					"${ROOTFS_DIR}/etc/systemd/system/dhcpcd.service.d"
 install -v -m 644 files/wait.conf		"${ROOTFS_DIR}/etc/systemd/system/dhcpcd.service.d/"
@@ -8,6 +7,7 @@ install -v -d                                   "${ROOTFS_DIR}/etc/systemd/syste
 install -v -m 644 files/reduce-timeout.conf     "${ROOTFS_DIR}/etc/systemd/system/networking.service.d/"
 
 on_chroot << EOF
+ln -sf /etc/network/interfaces /etc/network/interfaces.eth
 systemctl disable hostapd
 systemctl disable dnsmasq
 EOF

@@ -19,4 +19,8 @@ fi
 
 service systemd-udevd restart
 service supervisor restart
+
+#Suppress Kernel Messages
+dmesg --console-off
+
 exit 0

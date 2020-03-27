@@ -13,10 +13,15 @@ install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
 
 install -m 755 files/update-lomod         "${ROOTFS_DIR}/etc/cron.daily/"
 
+install -m 644 files/logo_transparent.png "${ROOTFS_DIR}/usr/share/plymouth/debian-logo.png"
+install -m 644 files/spinfinity.script    "${ROOTFS_DIR}/usr/share/plymouth/themes/spinfinity/"
+install -m 644 files/spinfinity.plymouth  "${ROOTFS_DIR}/usr/share/plymouth/themes/spinfinity/"
+
 on_chroot << EOF
 systemctl disable hwclock.sh
 systemctl disable nfs-common
 systemctl disable rpcbind
+plymouth-set-default-theme -R spinfinity
 
 if [ "${ENABLE_SSH}" == "1" ]; then
 	systemctl enable ssh
