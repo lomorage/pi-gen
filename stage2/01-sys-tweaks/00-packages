@@ -31,12 +31,6 @@ zip
 supervisor
 python3 python3-pyudev python3-pygame
 plymouth plymouth-themes
-lomo-base
-lomo-vips
-lomo-backend
-lomo-omxplayer
-lomo-web
-lomo-frame
 iftop
 tcpdump
 python-serial python3-serial
