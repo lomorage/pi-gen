@@ -44,3 +44,6 @@ ffmpeg
 rng-tools
 ethtool
 vl805fw
+pciutils
+rpi-eeprom
+raspinfo

@@ -9,3 +9,5 @@ gldriver-test
 fonts-droid-fallback
 fonts-liberation2
 plymouth plymouth-themes
+obconf
+arandr
