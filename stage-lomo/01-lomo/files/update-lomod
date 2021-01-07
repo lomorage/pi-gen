@@ -1,5 +1,7 @@
 #!/bin/sh
+set -xe
 
-curl -s "127.0.0.1:8000/user" | jq -r .Users[].HomeDir | xargs -I {} cp /opt/lomorage/var/assets.db {}
+admintoken=$(cat /opt/lomorage/etc/admin.json | jq -r '."admin-token"')
+curl -s "127.0.0.1:8000/user?token=$admintoken" | jq -r .Users[].HomeDir | sudo xargs -I {} cp /opt/lomorage/var/assets.db {}
 sudo apt-get update
-sudo apt-get --only-upgrade install -y lomo-base lomo-backend lomo-web lomo-frame
+sudo apt-get --only-upgrade install -y lomo-base lomo-vips lomo-backend lomo-web lomo-frame
