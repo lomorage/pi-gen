@@ -1,1 +1,1 @@
-deb [trusted=yes] https://lomoware.github.io/debian/buster buster main
+deb [trusted=yes] https://lomoware.lomorage.com/debian/buster buster main
